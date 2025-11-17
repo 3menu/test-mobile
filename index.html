@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-  <!-- ... các thẻ head của bạn vẫn giữ nguyên ... -->
-  <head>
+<html lang="vi">
+<head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Installable Web App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Mobile CMS Editor</title>
     
+    <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#ffffff" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Web App" />
-    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/d/dc/Android-icon-192x192.png" />
+    <meta name="apple-mobile-web-app-title" content="CMS Editor" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
     <link rel="manifest" href="/manifest.json" />
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,36 +20,40 @@
     <script type="importmap">
     {
       "imports": {
-        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-        "react/": "https://aistudiocdn.com/react@^19.2.0/",
-        "react": "https://aistudiocdn.com/react@^19.2.0"
+        "react-dom/": "https://ga.jspm.io/npm:react-dom@18.2.0/",
+        "react": "https://ga.jspm.io/npm:react@18.2.0/"
       }
     }
     </script>
-  </head>
-  <body>
+</head>
+<body>
     <div id="root"></div>
     <script type="text/babel" data-type="module">
       import React, { useState, useEffect } from 'react';
       import ReactDOM from 'react-dom/client';
 
       const App = () => {
-        // ... code xử lý install prompt của bạn vẫn giữ nguyên ...
         const [installPromptEvent, setInstallPromptEvent] = useState(null);
 
         useEffect(() => {
           const handleBeforeInstallPrompt = (event) => {
             event.preventDefault();
             setInstallPromptEvent(event);
+            console.log(`'beforeinstallprompt' event was fired.`);
           };
+
           window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+          
           return () => {
             window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
           };
         }, []);
 
         const handleInstallClick = () => {
-          if (!installPromptEvent) return;
+          if (!installPromptEvent) {
+            alert('Không thể cài đặt ngay lúc này. Hãy thử lại sau hoặc dùng tính năng "Thêm vào màn hình chính" của trình duyệt.');
+            return;
+          }
           installPromptEvent.prompt();
           installPromptEvent.userChoice.then((choiceResult) => {
             if (choiceResult.outcome === 'accepted') {
@@ -62,8 +66,8 @@
         };
 
         return (
-          <main className="bg-gray-50 h-screen w-screen flex items-center justify-center">
-            <div className="relative w-full max-w-[500px] mx-auto h-screen overflow-hidden border border-gray-300 shadow-lg md:h-[90vh] md:rounded-xl">
+          <main className="bg-gray-50 h-dvh w-screen flex items-center justify-center">
+            <div className="relative w-full h-full overflow-hidden">
               {installPromptEvent && (
                 <button
                   onClick={handleInstallClick}
@@ -75,13 +79,12 @@
               )}
               <iframe
                 id="menu-iframe"
-                // --- THAY ĐỔI Ở ĐÂY ---
-                // Dán URL bạn đã sao chép ở Bước 1 vào đây
-                src="https://n-idqiiyuekpxu4oyteana2q27zeawcgj6h5hhv7a-0lu-script.googleusercontent.com/userCodeAppPanel?..."
+                // ===================================================================
+                // QUAN TRỌNG: Dán URL của bạn vào đây! (Xem hướng dẫn bên dưới)
+                // ===================================================================
+                src="https:\/\/n-idqiiyuekpxu4oyteana2q27zeawcgj6h5hhv7a-0lu-script.googleusercontent.com\/userCodeAppPanel?createOAuthDialog\x3dtrue"
                 className="w-full h-full border-none"
-                loading="lazy"
-                scrolling="no"
-                title="3enu"
+                title="Mobile CMS Editor"
                 allow="geolocation; microphone; camera; midi; encrypted-media; autoplay; clipboard-write; web-share"
               >
               </iframe>
@@ -91,22 +94,22 @@
       };
 
       const rootElement = document.getElementById('root');
-      if (!rootElement) {
-        throw new Error("Could not find root element to mount to");
-      }
       const root = ReactDOM.createRoot(rootElement);
-      root.render(<React.StrictMode><App /></React.StrictMode>);
+      root.render(<App />);
+
     </script>
-    
-    <!-- ... script đăng ký service-worker của bạn vẫn giữ nguyên ... -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(reg => console.log('ServiceWorker registration successful'))
-            .catch(err => console.log('ServiceWorker registration failed:', err));
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(error => {
+              console.log('ServiceWorker registration failed: ', error);
+            });
         });
       }
     </script>
-  </body>
+</body>
 </html>
