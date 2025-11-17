@@ -1,54 +1,45 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
+<html lang="en">
+  <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Cậu Ốc Menu</title>
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#f0f0f0" />
-
-    <!-- iOS meta tags for PWA -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Cậu Ốc Menu">
-    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/d/dc/Android-icon-192x192.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Installable Web App</title>
     
-    <style>
-        html {
-            height: 100%;
-        }
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-            background-color: #f0f0f0; /* Màu nền xám nhạt để làm nổi bật khung app */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
-<script type="importmap">
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Web App" />
+    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/d/dc/Android-icon-192x192.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  <script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0"
   }
 }
 </script>
 </head>
-<body>
-    <div style="position: relative; width: 100%; max-width: 500px; margin: 0 auto; height: 100vh; overflow: hidden; border: 1px solid #ddd; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background-color: white;">
-        <iframe 
-            id="menu-iframe"
-            src="https://script.google.com/macros/s/AKfycbzC5YfFuHV6z4wCbowUTkf8qC3wJJoFcVX1eBDTrO1gfHLPbOQQaYQnMCDTWVKqtQM/exec" 
-            style="width: 100%; height: 100%; border: none;"
-            loading="lazy"
-            scrolling="no"
-            title="Cậu Ốc Menu">
-        </iframe>
-    </div>
-</body>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(error => {
+              console.log('ServiceWorker registration failed: ', error);
+            });
+        });
+      }
+    </script>
+  </body>
 </html>
