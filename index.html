@@ -1,117 +1,79 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>3enu App</title>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Installable Web App</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Web App" />
+    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/d/dc/Android-icon-192x192.png" />
+    <link rel="manifest" href="/manifest.json" />
 
-  <!-- PWA Meta Tags -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="3enu App">
-  <meta name="theme-color" content="#ffffff">
-
-  <!-- Manifest Link -->
-  <link rel="manifest" href="/manifest.json">
-
-  <!-- Apple Touch Icon -->
-  <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: #ffffff;
-    }
-    .container {
-      width: 100%;
-      height: 100%; /* Will be controlled by JS for robustness */
-      overflow: hidden;
-    }
-    #menu-iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      /* Start hidden until loaded */
-      visibility: hidden;
-    }
-    .loader {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 8px solid #f3f3f3; /* Light grey */
-      border-top: 8px solid #3498db; /* Blue */
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spin 1.5s linear infinite;
-      z-index: 10;
-    }
-    @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-  </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0"
+  }
+}
+</script>
 </head>
-<body>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+      import React from 'react';
+      import ReactDOM from 'react-dom/client';
 
-  <div id="loader" class="loader"></div>
+      const App = () => {
+        return (
+          <main className="bg-gray-50 h-screen w-screen flex items-center justify-center">
+            <div className="relative w-full max-w-[500px] mx-auto h-screen overflow-hidden border border-gray-300 shadow-lg md:h-[90vh] md:rounded-xl">
+              <iframe
+                id="menu-iframe"
+                src="https://script.google.com/macros/s/AKfycbxxl5oxrVAJKAGFXjrFId5_1EiNDjbbhsnMTwLLTBG4L8MnMHuQUkal1FEzT7QLUB4/exec"
+                className="w-full h-full border-none"
+                loading="lazy"
+                scrolling="no"
+                title="3enu"
+              >
+              </iframe>
+            </div>
+          </main>
+        );
+      };
 
-  <div id="app-container" class="container">
-    <iframe
-      id="menu-iframe"
-      src="https://script.google.com/macros/s/AKfycbxxl5oxrVAJKAGFXjrFId5_1EiNDjbbhsnMTwLLTBG4L8MnMHuQUkal1FEzT7QLUB4/exec"
-      loading="lazy"
-      title="3enu">
-    </iframe>
-  </div>
+      const rootElement = document.getElementById('root');
+      if (!rootElement) {
+        throw new Error("Could not find root element to mount to");
+      }
 
-  <script>
-    // --- Service Worker Registration ---
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(registration => {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          })
-          .catch(error => {
-            console.log('ServiceWorker registration failed: ', error);
-          });
-      });
-    }
-
-    // --- Dynamic Height for Mobile Viewport ---
-    function setAppHeight() {
-      const appContainer = document.getElementById('app-container');
-      // Use visualViewport for more accuracy on mobile, fallback to innerHeight
-      const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      appContainer.style.height = `${height}px`;
-    }
-
-    // Set height on load and resize/orientationchange events
-    window.addEventListener('resize', setAppHeight);
-    if(window.visualViewport) {
-      window.visualViewport.addEventListener('resize', setAppHeight);
-    }
-    // Set initial height when the DOM is ready
-    document.addEventListener('DOMContentLoaded', setAppHeight);
-
-    // --- Iframe Loading Handler ---
-    const iframe = document.getElementById('menu-iframe');
-    const loader = document.getElementById('loader');
-
-    iframe.addEventListener('load', () => {
-      // Hide loader and show iframe
-      loader.style.display = 'none';
-      iframe.style.visibility = 'visible';
-    });
-  </script>
-</body>
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(error => {
+              console.log('ServiceWorker registration failed: ', error);
+            });
+        });
+      }
+    </script>
+  </body>
 </html>
