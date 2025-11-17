@@ -1,142 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>3enu App</title>
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#ffffff" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="3enu App" />
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-    <link rel="manifest" href="/manifest.json" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Quản lý Sản phẩm</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#4f46e5"/>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script type="importmap">
-    {
-      "imports": {
-        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-        "react/": "https://aistudiocdn.com/react@^19.2.0/",
-        "react": "https://aistudiocdn.com/react@^19.2.0"
+  <link rel="manifest" href="data:application/manifest+json,{
+    &quot;name&quot;: &quot;Quản lý Sản phẩm&quot;,
+    &quot;short_name&quot;: &quot;QL Sản phẩm&quot;,
+    &quot;start_url&quot;: &quot;.&quot;,
+    &quot;display&quot;: &quot;standalone&quot;,
+    &quot;background_color&quot;: &quot;#f8fafc&quot;,
+    &quot;theme_color&quot;: &quot;#4f46e5&quot;,
+    &quot;description&quot;: &quot;Ứng dụng quản lý sản phẩm trên Google Sheet.&quot;,
+    &quot;icons&quot;: [
+      {
+        &quot;src&quot;: &quot;https://images.icon-icons.com/729/PNG/96/whatsapp_icon-icons.com_62756.png&quot;,
+        &quot;sizes&quot;: &quot;192x192&quot;,
+        &quot;type&quot;: &quot;image/png&quot;
+      },
+      {
+        &quot;src&quot;: &quot;https://images.icon-icons.com/855/PNG/96/WhatsApp_social_media_corporate_logo_icon-icons.com_67680.png&quot;,
+        &quot;sizes&quot;: &quot;512x512&quot;,
+        &quot;type&quot;: &quot;image/png&quot;,
+        &quot;purpose&quot;: &quot;any maskable&quot;
       }
-    }
-    </script>
-    <style>
-      /* A robust, CSS-only approach for a full-screen app shell */
-      html, body, #root {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden; /* Prevent the shell from scrolling */
-        position: fixed; /* Lock the layout to the viewport, avoids address bar issues */
-      }
-    </style>
+    ]
+  }">
+
+  <!-- Các thẻ meta cho iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="QL Sản phẩm">
+  <link rel="apple-touch-icon" href="https://images.icon-icons.com/2428/PNG/96/whatsapp_black_logo_icon_147050.png">
+  <!-- KẾT THÚC BỔ SUNG -->
+  
+  <style>
+    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+     #warning {
+    display: none !important;
+  }
+  </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script type="text/babel" data-type="module">
-      import React, { useState, useEffect } from 'react';
-      import ReactDOM from 'react-dom/client';
+<div style="position: relative; width: 100%; max-width: 500px; margin: 0 auto; height: 100vh; overflow: hidden; border: 1px solid #ddd; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+ 
+  <iframe 
+    id="menu-iframe"
+    src="https://script.google.com/macros/s/AKfycbzC5YfFuHV6z4wCbowUTkf8qC3wJJoFcVX1eBDTrO1gfHLPbOQQaYQnMCDTWVKqtQM/exec" 
+    style="width: 100%; height: 100%; border: none;"
+    loading="lazy"
+    scrolling="no"
+    title="Cậu Ốc Menu">
+  </iframe>
+</div>
 
-      const App = () => {
-        const [installPromptEvent, setInstallPromptEvent] = useState(null);
-        const [isLoading, setIsLoading] = useState(true);
-        
-        useEffect(() => {
-          const handleBeforeInstallPrompt = (event) => {
-            event.preventDefault();
-            setInstallPromptEvent(event);
-          };
 
-          window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-          
-          return () => {
-            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-          };
-        }, []);
+<script type="text/javascript">
+  const CACHE_NAME = 'pwa-wrapper-cache-v1';
+const urlsToCache = [ '/', '/index.html' ]; // Chỉ cần cache trang vỏ bọc
 
-        const handleInstallClick = () => {
-          if (!installPromptEvent) {
-            return;
-          }
-          installPromptEvent.prompt();
-          installPromptEvent.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              console.log('User accepted the A2HS prompt');
-            } else {
-              console.log('User dismissed the A2HS prompt');
-            }
-            setInstallPromptEvent(null);
-          });
-        };
-        
-        const handleIframeLoad = () => {
-            setIsLoading(false);
-        };
+self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))));
+self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(res => res || fetch(e.request))));
+</script>
 
-        return (
-          <main className="w-full h-full bg-white">
-            <div className="relative w-full h-full">
-              {installPromptEvent && (
-                <button
-                  onClick={handleInstallClick}
-                  className="absolute top-4 right-4 bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 z-20"
-                  aria-label="Install App"
-                >
-                  Cài đặt
-                </button>
-              )}
-              
-              {isLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
-                  <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-                </div>
-              )}
-
-              <iframe
-                id="menu-iframe"
-                src="https://script.google.com/macros/s/AKfycbxxl5oxrVAJKAGFXjrFId5_1EiNDjbbhsnMTwLLTBG4L8MnMHuQUkal1FEzT7QLUB4/exec"
-                className={`w-full h-full border-none transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
-                title="3enu"
-                allow="geolocation; microphone; camera; midi; encrypted-media; autoplay; clipboard-write; web-share"
-                onLoad={handleIframeLoad}
-              >
-              </iframe>
-            </div>
-          </main>
-        );
-      };
-
-      const rootElement = document.getElementById('root');
-      if (!rootElement) {
-        throw new Error("Could not find root element to mount to");
-      }
-
-      const root = ReactDOM.createRoot(rootElement);
-      root.render(
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      );
-    </script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-              console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            })
-            .catch(error => {
-              console.log('ServiceWorker registration failed: ', error);
-            });
-        });
-      }
-    </script>
-  </body>
+</body>
 </html>
