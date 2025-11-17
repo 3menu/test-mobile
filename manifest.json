@@ -1,0 +1,20 @@
+{
+  "short_name": "Web App",
+  "name": "Installable Web App Viewer",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzRhOTBlMiIgcng9IjMyIi8+PHJlY3QgeD0iMjQiIHk9IjI0IiB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjE0NCIgZmlsbD0iI2ZmZmZmZiIgcng9IjE2Ii8+PHJlY3QgeD0iMzYiIHk9IjM2IiB3aWR0aD0iMTIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZTBlMGUwIiByeD0iOCIvPjxyZWN0IHg9IjM2IiB5PSI2OCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI4OCIgZmlsbD0iI2Y1ZjVmNSIgcng9IjgiLz48L3N2Zz4=",
+      "type": "image/svg+xml",
+      "sizes": "192x192"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzRhOTBlMiIgcng9Ijg1Ii8+PHJlY3QgeD0iNjQiIHk9IjY0IiB3aWR0aD0iMzg0IiBoZWlnaHQ9IjM4NCIgZmlsbD0iI2ZmZmZmZiIgcng9IjQyIi8+PHJlY3QgeD0iOTYiIHk9Ijk2IiB3aWR0aD0iMzIwIiBoZWlnaHQ9IjUzIiBmaWxsPSIjZTBlMGUwIiByeD0iMjEiLz48cmVjdCB4PSI5NiIgeT0iMTgxIiB3aWR0aD0iMzIwIiBoZWlnaHQ9IjIzNSIgZmlsbD0iI2Y1ZjVmNSIgcng9IjIxIi8+PC9zdmc+",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#4a90e2",
+  "background_color": "#ffffff"
+}
