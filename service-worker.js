@@ -1,18 +1,21 @@
-// A simple service worker for caching and offline support.
 
-const CACHE_NAME = '3enu-app-cache-v1';
+const CACHE_NAME = 'pwa-iframe-app-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json',
-  // IMPORTANT: Caching app icons is required for installability.
- 
-  '/icon-192x192.png',
- 
-  '/icon-512x512.png'
+  '/manifest.json'
+  // Note: Add paths to your icon files here if they are hosted locally.
+  // '/icons/icon-72x72.png',
+  // '/icons/icon-96x96.png',
+  // '/icons/icon-128x128.png',
+  // '/icons/icon-144x144.png',
+  // '/icons/icon-152x152.png',
+  // '/icons/icon-192x192.png',
+  // '/icons/icon-384x384.png',
+  // '/icons/icon-512x512.png'
 ];
 
-// Install event: Open a cache and add the core assets to it.
+// Install the service worker and cache the static assets
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -21,9 +24,10 @@ self.addEventListener('install', event => {
         return cache.addAll(urlsToCache);
       })
   );
+  self.skipWaiting();
 });
 
-// Activate event: Clean up old caches.
+// Activate event: clean up old caches
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
@@ -37,52 +41,45 @@ self.addEventListener('activate', event => {
       );
     })
   );
+  return self.clients.claim();
 });
 
-// Fetch event: Serve cached content when offline.
+// Fetch event: serve assets from cache or network
 self.addEventListener('fetch', event => {
   // We only want to cache GET requests.
   if (event.request.method !== 'GET') {
     return;
   }
-
+  
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Cache hit - return response from cache.
+        // Cache hit - return response
         if (response) {
           return response;
         }
 
-        // Not in cache - fetch from network.
-        return fetch(event.request).then(
-          networkResponse => {
+        // Clone the request because it's a stream and can only be consumed once.
+        const fetchRequest = event.request.clone();
+
+        return fetch(fetchRequest).then(
+          response => {
             // Check if we received a valid response
-            if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-              return networkResponse;
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
             }
 
-            // IMPORTANT: Clone the response. A response is a stream
-            // and because we want the browser to consume the response
-            // as well as the cache consuming the response, we need
-            // to clone it so we have two streams.
-            const responseToCache = networkResponse.clone();
+            // Clone the response because it's also a stream.
+            const responseToCache = response.clone();
 
             caches.open(CACHE_NAME)
               .then(cache => {
-                // We don't cache the Google Script iframe
-                if (!event.request.url.includes('script.google.com')) {
-                   cache.put(event.request, responseToCache);
-                }
+                cache.put(event.request, responseToCache);
               });
 
-            return networkResponse;
+            return response;
           }
         );
-      })
-      .catch(() => {
-        // If both cache and network fail, you can serve a fallback page.
-        // For this app, we just let the browser handle the error.
       })
   );
 });
