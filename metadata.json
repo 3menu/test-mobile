@@ -1,0 +1,5 @@
+{
+  "name": "3menu Mobile App",
+  "description": "A mobile web application wrapper for the 3menu website, providing an app-like experience for easy access on iOS and Android devices.",
+  "requestFramePermissions": []
+}
