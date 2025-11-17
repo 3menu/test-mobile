@@ -15,6 +15,7 @@
     <link rel="manifest" href="/manifest.json" />
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="importmap">
 {
   "imports": {
@@ -27,7 +28,40 @@
 </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <script type="text/babel" data-type="module">
+      import React from 'react';
+      import ReactDOM from 'react-dom/client';
+
+      const App = () => {
+        return (
+          <main className="bg-gray-50 h-screen w-screen flex items-center justify-center">
+            <div className="relative w-full max-w-[500px] mx-auto h-screen overflow-hidden border border-gray-300 shadow-lg md:h-[90vh] md:rounded-xl">
+              <iframe
+                id="menu-iframe"
+                src="https://script.google.com/macros/s/AKfycbyltE-o4z7J7DR7O-8JumeppVGGwrnmX21d1e_AmHhMdYnNq2_FyGXhENnkaEO4z3em/exec"
+                className="w-full h-full border-none"
+                loading="lazy"
+                scrolling="no"
+                title="3enu"
+              >
+              </iframe>
+            </div>
+          </main>
+        );
+      };
+
+      const rootElement = document.getElementById('root');
+      if (!rootElement) {
+        throw new Error("Could not find root element to mount to");
+      }
+
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
