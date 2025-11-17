@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const App: React.FC = () => {
@@ -10,6 +9,7 @@ const App: React.FC = () => {
           src="https://script.google.com/macros/s/AKfycbxu7GQCsUoD2N30xc5bck6wHuUwdcsXw90EI6GuXtE8kgIk3j5GYVFymodly2wtDzuL/exec"
           className="w-full h-full border-none"
           loading="lazy"
+          scrolling="no"
           title="3enu"
         >
         </iframe>
