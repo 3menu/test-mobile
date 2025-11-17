@@ -7,8 +7,8 @@
     <title>Installable Web App</title>
     
     <!-- PWA Meta Tags -->
-    <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#ffffff" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Web App" />
@@ -30,13 +30,58 @@
   <body>
     <div id="root"></div>
     <script type="text/babel" data-type="module">
-      import React from 'react';
+      import React, { useState, useEffect } from 'react';
       import ReactDOM from 'react-dom/client';
 
       const App = () => {
+        const [installPromptEvent, setInstallPromptEvent] = useState(null);
+
+        useEffect(() => {
+          const handleBeforeInstallPrompt = (event) => {
+            // Prevent the mini-infobar from appearing on mobile
+            event.preventDefault();
+            // Stash the event so it can be triggered later.
+            setInstallPromptEvent(event);
+          };
+
+          window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+          
+          // Cleanup listener when component unmounts
+          return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+          };
+        }, []);
+
+        const handleInstallClick = () => {
+          if (!installPromptEvent) {
+            return;
+          }
+          // Show the install prompt
+          installPromptEvent.prompt();
+          // Wait for the user to respond to the prompt
+          installPromptEvent.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the A2HS prompt');
+            } else {
+              console.log('User dismissed the A2HS prompt');
+            }
+            // We can only use the prompt once, so clear it.
+            setInstallPromptEvent(null);
+          });
+        };
+
         return (
           <main className="bg-gray-50 h-screen w-screen flex items-center justify-center">
             <div className="relative w-full max-w-[500px] mx-auto h-screen overflow-hidden border border-gray-300 shadow-lg md:h-[90vh] md:rounded-xl">
+              {installPromptEvent && (
+                <button
+                  onClick={handleInstallClick}
+                  className="absolute top-4 right-4 bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 z-10"
+                  aria-label="Install App"
+                >
+                  Cài đặt
+                </button>
+              )}
               <iframe
                 id="menu-iframe"
                 src="https://script.google.com/macros/s/AKfycbxxl5oxrVAJKAGFXjrFId5_1EiNDjbbhsnMTwLLTBG4L8MnMHuQUkal1FEzT7QLUB4/exec"
@@ -44,6 +89,7 @@
                 loading="lazy"
                 scrolling="no"
                 title="3enu"
+                allow="geolocation; microphone; camera; midi; encrypted-media; autoplay; clipboard-write; web-share"
               >
               </iframe>
             </div>
