@@ -1,142 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>3enu App</title>
+    <meta charset="UTF-8">
+    <title>Mobile CMS Editor</title>
     
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#ffffff" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="3enu App" />
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-    <link rel="manifest" href="/manifest.json" />
+    <!-- Meta tags quan trọng cho PWA và hiển thị trên mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CMS Editor">
+    <meta name="theme-color" content="#f8fafc">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script type="importmap">
-    {
-      "imports": {
-        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-        "react/": "https://aistudiocdn.com/react@^19.2.0/",
-        "react": "https://aistudiocdn.com/react@^19.2.0"
-      }
-    }
-    </script>
+    <!-- Liên kết đến file Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Icon cho iOS -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
     <style>
-      /* A robust, CSS-only approach for a full-screen app shell */
-      html, body, #root {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden; /* Prevent the shell from scrolling */
-        position: fixed; /* Lock the layout to the viewport, avoids address bar issues */
-      }
+        /* Reset CSS để loại bỏ khoảng trắng mặc định */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Ngăn cuộn trang chính */
+            background-color: #f8fafc; /* Màu nền giống app của bạn */
+        }
+
+        /* CSS cho iframe để chiếm toàn bộ màn hình */
+        #app-frame {
+            border: none;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script type="text/babel" data-type="module">
-      import React, { useState, useEffect } from 'react';
-      import ReactDOM from 'react-dom/client';
+    <!-- Iframe trỏ đến URL ứng dụng Apps Script của bạn -->
+    <iframe id="app-frame" src="https://script.google.com/macros/s/AKfycbxVL4xtiNdGmHUA2tuu2Se5S3GuGir5VEDB56wOspcO2SD9eVGyVS-jNaji1pQ76WU/exec"></iframe>
 
-      const App = () => {
-        const [installPromptEvent, setInstallPromptEvent] = useState(null);
-        const [isLoading, setIsLoading] = useState(true);
-        
-        useEffect(() => {
-          const handleBeforeInstallPrompt = (event) => {
-            event.preventDefault();
-            setInstallPromptEvent(event);
-          };
-
-          window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-          
-          return () => {
-            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-          };
-        }, []);
-
-        const handleInstallClick = () => {
-          if (!installPromptEvent) {
-            return;
-          }
-          installPromptEvent.prompt();
-          installPromptEvent.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              console.log('User accepted the A2HS prompt');
-            } else {
-              console.log('User dismissed the A2HS prompt');
-            }
-            setInstallPromptEvent(null);
-          });
-        };
-        
-        const handleIframeLoad = () => {
-            setIsLoading(false);
-        };
-
-        return (
-          <main className="w-full h-full bg-white">
-            <div className="relative w-full h-full">
-              {installPromptEvent && (
-                <button
-                  onClick={handleInstallClick}
-                  className="absolute top-4 right-4 bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 z-20"
-                  aria-label="Install App"
-                >
-                  Cài đặt
-                </button>
-              )}
-              
-              {isLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
-                  <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-                </div>
-              )}
-
-              <iframe
-                id="menu-iframe"
-                src="https://script.google.com/macros/s/AKfycbxVL4xtiNdGmHUA2tuu2Se5S3GuGir5VEDB56wOspcO2SD9eVGyVS-jNaji1pQ76WU/exec"
-                className={`w-full h-full border-none transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
-                title="3enu"
-                allow="geolocation; microphone; camera; midi; encrypted-media; autoplay; clipboard-write; web-share"
-                onLoad={handleIframeLoad}
-              >
-              </iframe>
-            </div>
-          </main>
-        );
-      };
-
-      const rootElement = document.getElementById('root');
-      if (!rootElement) {
-        throw new Error("Could not find root element to mount to");
-      }
-
-      const root = ReactDOM.createRoot(rootElement);
-      root.render(
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      );
-    </script>
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-              console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            })
-            .catch(error => {
-              console.log('ServiceWorker registration failed: ', error);
+        // Đăng ký Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
             });
-        });
-      }
+        }
     </script>
-  </body>
+</body>
 </html>
